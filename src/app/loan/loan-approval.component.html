@@ -1,0 +1,117 @@
+<h5>Chiled Page - Loan Approval</h5>
+<h2>Total Sum of Loan: {{loanTotalAmount}}</h2>
+<table border="1"
+       cellspacing="0"
+       cellpadding="2">
+  <tr>
+    <th>EmpId</th>
+    <th>EmpName</th>
+    <th>IsReviewer</th>
+    <th>IsApprover</th>
+    <th>IsCompleted</th>
+    <th>LoanLimit</th>
+  </tr>
+  <tr *ngFor="let emp of empListDataFromParent">
+    <td>{{emp.EmpId}}</td>
+    <td>{{emp.EmpName}}</td>
+    <td>{{emp.IsReviewer}}</td>
+    <td>{{emp.IsApprover}}</td>
+    <td>{{emp.IsCompleted}}</td>
+    <td>{{emp.LoanLimit}}</td>
+  </tr>
+</table>
+
+<!-- <ul>
+  <li *ngFor="let emp of empList">{{emp.EmpName}},.... IsRev: {{emp.IsReviewer}}; IsApprover:{{emp.IsApprover}};
+    LoanLimit: {{emp.LoanLimit}}</li>
+</ul> -->
+
+<hr />
+
+<table border="1"
+       cellspacing="0"
+       cellpadding="2">
+  <tr>
+    <th>#</th>
+    <th>Emp</th>
+    <th>Is Done</th>
+  </tr>
+  <tr>
+    <td>Rev-1</td>
+    <td>
+      <select name="emp"
+              id="REV_1"
+              (change)="OnRevChange($event, $event.target.value)">
+        <option value="-1">Select</option>
+        <option *ngFor="let emp of Reviewer_1_EmpList"
+                value="{{emp.EmpId}}">{{emp.EmpName}}</option>
+      </select>
+    </td>
+    <td><input type="radio"
+             name="rev-1"
+             id="rev-1-yes"
+             [checked]="Rev_1_IsComplete">Yes
+      <input type="radio"
+             name="rev-1"
+             id="rev-1-no"
+             [checked]="!Rev_1_IsComplete">No</td>
+  </tr>
+  <tr>
+    <td>Rev-2</td>
+    <td>
+      <select name="emp"
+              id="REV_2"
+              (change)="OnRevChange($event, $event.target.value)">
+        <option value="-1">Select</option>
+        <option *ngFor="let emp of Reviewer_2_EmpList"
+                value="{{emp.EmpId}}">{{emp.EmpName}}</option>
+      </select>
+    </td>
+    <td><input type="radio"
+             name="rev-2"
+             id="rev-2-yes"
+             [checked]="Rev_2_IsComplete">Yes
+      <input type="radio"
+             name="rev-2"
+             id="rev-2-no"
+             [checked]="!Rev_2_IsComplete">No</td>
+  </tr>
+  <tr>
+    <td>Approver-1</td>
+    <td>
+      <select name="emp"
+              id="APPRV_1">
+        <option value="-1">Select</option>
+        <option *ngFor="let emp of Approver_1_EmpList"
+                value="emp.EmpId">{{emp.EmpName}}</option>
+      </select>
+    </td>
+    <td><input type="radio"
+             name="appr-1"
+             id="appr-1-yes"
+             [checked]="APPRV_1_IsComplete">Yes
+      <input type="radio"
+             name="appr-1"
+             id="appr-1-no"
+             [checked]="!APPRV_1_IsComplete">No</td>
+  </tr>
+  <tr>
+    <td>Approver-2</td>
+    <td>
+      <select name="emp"
+              id="APPRV_2">
+        <option value="-1">Select</option>
+        <option *ngFor="let emp of Approver_2_EmpList"
+                value="emp.EmpId">{{emp.EmpName}}</option>
+      </select>
+    </td>
+    <td><input type="radio"
+             name="appr-2"
+             id="appr-2-yes"
+             [checked]="APPRV_2_IsComplete">Yes
+      <input type="radio"
+             name="appr-2"
+             id="appr-2-no"
+             [checked]="!APPRV_2_IsComplete">No</td>
+  </tr>
+</table>
