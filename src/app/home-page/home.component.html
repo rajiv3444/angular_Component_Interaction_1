@@ -1,4 +1,7 @@
 <h1>This is home page</h1>
 <button (click)="fetchData()">Fetch Data</button>
+cuurent login user id: {{currentLoginUserId}}
 <app-loan-approval [empListDataFromParent]="empListDataFromAPI"
-                   [loanTotalAmount]="LoanTotalCalculated">loading loan approval</app-loan-approval>
+                   [completedActionDataFromDb]="completedActionData"
+                   [loanTotalAmount]="LoanTotalCalculated"
+                   [loggedInUserId]="currentLoginUserId">loading loan approval</app-loan-approval>

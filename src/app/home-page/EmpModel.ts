@@ -9,11 +9,41 @@ export interface EmpModel {
   LoanLimit: number;
 }
 
+export interface CompletedModel {
+  UserAction: String;
+  CompletedByUserId: string;
+  CompletedDate: string;
+  IsCompleted: string;
+}
+
+export class CompletedAction {
+  completedActionMockData: CompletedModel[];
+  /**
+   *
+   */
+  constructor() {
+    this.completedActionMockData = [
+      {
+        UserAction: "REVIEWER_1",
+        CompletedByUserId: "10",
+        CompletedDate: "01/31/2018",
+        IsCompleted: "Y"
+      },
+      {
+        UserAction: "REVIEWER_2",
+        CompletedByUserId: "11",
+        CompletedDate: "",
+        IsCompleted: "N"
+      }
+    ];
+  }
+}
+
 export class EmpDataClass {
-  mockData: EmpModel[];
+  empMockData: EmpModel[];
 
   constructor() {
-    this.mockData = [
+    this.empMockData = [
       {
         EmpId: "10",
         EmpName: "shobhit",

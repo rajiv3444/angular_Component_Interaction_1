@@ -40,78 +40,98 @@
     <td>Rev-1</td>
     <td>
       <select name="emp"
-              id="REV_1"
-              (change)="OnRevChange($event, $event.target.value)">
-        <option value="-1">Select</option>
-        <option *ngFor="let emp of Reviewer_1_EmpList"
+              id="{{_REV1}}"
+              [disabled]="IsDdDisabledRev1"
+              (change)="OnReviewerApproverChange($event, $event.target.value)">
+        <option value="-1">--Select--</option>
+        <option *ngFor="let emp of empListRevwr_1"
+                [selected]="emp.EmpId==selectedEmpIdRev1"
                 value="{{emp.EmpId}}">{{emp.EmpName}}</option>
       </select>
     </td>
     <td><input type="radio"
              name="rev-1"
              id="rev-1-yes"
+             [disabled]="IsRadioDisabledRev1"
+             (click)="OnCheckBoxClick($event)"
              [checked]="Rev_1_IsComplete">Yes
       <input type="radio"
              name="rev-1"
              id="rev-1-no"
+             [disabled]="IsRadioDisabledRev1"
+             (click)="OnCheckBoxClick($event)"
              [checked]="!Rev_1_IsComplete">No</td>
   </tr>
   <tr>
     <td>Rev-2</td>
     <td>
       <select name="emp"
-              id="REV_2"
-              (change)="OnRevChange($event, $event.target.value)">
-        <option value="-1">Select</option>
-        <option *ngFor="let emp of Reviewer_2_EmpList"
+              id="{{_REV2}}"
+              [disabled]="IsDdDisabledRev2"
+              (change)="OnReviewerApproverChange($event, $event.target.value)">
+        <option value="-1">--Select--</option>
+        <option *ngFor="let emp of empListRevwr_2"
+                [selected]="emp.EmpId==selectedEmpIdRev2"
                 value="{{emp.EmpId}}">{{emp.EmpName}}</option>
       </select>
     </td>
     <td><input type="radio"
              name="rev-2"
              id="rev-2-yes"
+             [disabled]="IsRadioDisabledRev2"
+             (click)="OnCheckBoxClick($event)"
              [checked]="Rev_2_IsComplete">Yes
       <input type="radio"
              name="rev-2"
              id="rev-2-no"
+             [disabled]="IsRadioDisabledRev2"
+             (click)="OnCheckBoxClick($event)"
              [checked]="!Rev_2_IsComplete">No</td>
   </tr>
   <tr>
     <td>Approver-1</td>
     <td>
       <select name="emp"
-              id="APPRV_1">
-        <option value="-1">Select</option>
-        <option *ngFor="let emp of Approver_1_EmpList"
-                value="emp.EmpId">{{emp.EmpName}}</option>
+              id="{{_APPRV1}}"
+              (change)="OnReviewerApproverChange($event, $event.target.value)">
+        <option value="-1">--Select--</option>
+        <option *ngFor="let emp of empListApprover_1"
+                [selected]="emp.EmpId==selectedEmpIdApprvr1"
+                value="{{emp.EmpId}}">{{emp.EmpName}}</option>
       </select>
     </td>
     <td><input type="radio"
              name="appr-1"
              id="appr-1-yes"
+             (click)="OnCheckBoxClick($event)"
              [checked]="APPRV_1_IsComplete">Yes
       <input type="radio"
              name="appr-1"
              id="appr-1-no"
+             (click)="OnCheckBoxClick($event)"
              [checked]="!APPRV_1_IsComplete">No</td>
   </tr>
   <tr>
     <td>Approver-2</td>
     <td>
       <select name="emp"
-              id="APPRV_2">
-        <option value="-1">Select</option>
-        <option *ngFor="let emp of Approver_2_EmpList"
-                value="emp.EmpId">{{emp.EmpName}}</option>
+              id="{{_APPRV2}}"
+              (change)="OnReviewerApproverChange($event, $event.target.value)">
+        <option value="-1">--Select--</option>
+        <option *ngFor="let emp of empListApprover_2"
+                [selected]="emp.EmpId==selectedEmpIdApprvr2"
+                value="{{emp.EmpId}}">{{emp.EmpName}}</option>
       </select>
     </td>
     <td><input type="radio"
              name="appr-2"
              id="appr-2-yes"
+             (click)="OnCheckBoxClick($event)"
              [checked]="APPRV_2_IsComplete">Yes
       <input type="radio"
              name="appr-2"
              id="appr-2-no"
+             (click)="OnCheckBoxClick($event)"
              [checked]="!APPRV_2_IsComplete">No</td>
   </tr>
 </table>

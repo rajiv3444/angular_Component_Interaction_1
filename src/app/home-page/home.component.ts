@@ -1,23 +1,29 @@
 import { Component } from "@angular/core";
-import { EmpModel } from "./EmpModel";
-import { EmpDataClass } from "./EmpModel";
+import { EmpModel, CompletedModel } from "./EmpModel";
+import { EmpDataClass, CompletedAction } from "./EmpModel";
 
 @Component({
   selector: "app-home-page",
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.css"],
-  providers: [EmpDataClass]
+  providers: [EmpDataClass, CompletedAction]
 })
 export class HomeComponent {
-  empListDataFromAPI: EmpModel[];
-  LoanTotalCalculated: number;
-  empRevList: EmpModel[];
-  empAppList: EmpModel[];
-
+  public empListDataFromAPI: EmpModel[];
+  public completedActionData: CompletedModel[];
+  public LoanTotalCalculated: number;
+  public empRevList: EmpModel[];
+  public empAppList: EmpModel[];
+  public currentLoginUserId: string;
   //// constructor
-  constructor(private empDataClass: EmpDataClass) {
+  constructor(
+    private empDataClass: EmpDataClass,
+    private completedAction: CompletedAction
+  ) {
+    this.currentLoginUserId = "110";
     this.LoanTotalCalculated = 5000;
-    this.empListDataFromAPI = this.empDataClass.mockData;
+    this.empListDataFromAPI = this.empDataClass.empMockData;
+    this.completedActionData = this.completedAction.completedActionMockData;
   }
 
   fetchData() {

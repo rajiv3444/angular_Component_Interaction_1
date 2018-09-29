@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { EmpModel } from "../home-page/EmpModel";
+import { EmpModel, CompletedModel } from "../home-page/EmpModel";
 
 @Component({
   selector: "app-loan-approval",
@@ -7,45 +7,108 @@ import { EmpModel } from "../home-page/EmpModel";
   styleUrls: ["./loan-approval.component.css"]
 })
 export class LoanApprovalComponent implements OnInit {
-  /** */
   /**constants */
   public _REV1: string = "REV_1";
   public _REV2: string = "REV_2";
   public _APPRV1: string = "APPRV_1";
   public _APPRV2: string = "APPRV_2";
+  /************************************************************ */
 
-  /**Input param sent by parent component. emp list json data from service call */
+  /**Input data from service call */
   @Input()
   public empListDataFromParent: EmpModel[];
   @Input()
+  public completedActionDataFromDb: CompletedModel[];
+  @Input()
   public loanTotalAmount: number;
+  @Input()
+  public loggedInUserId: string;
+  /************************************************************ */
 
   /**Filtered employee list to bind with dropdown */
-  public Reviewer_1_EmpList: EmpModel[];
-  public Reviewer_2_EmpList: EmpModel[];
-  public Approver_1_EmpList: EmpModel[];
-  public Approver_2_EmpList: EmpModel[];
+  public empListRevwr_1: EmpModel[];
+  public empListRevwr_2: EmpModel[];
+  public empListApprover_1: EmpModel[];
+  public empListApprover_2: EmpModel[];
+  public empListTemp: EmpModel[];
+  /************************************************************ */
 
-  /**chekox status for is-completed status  */
+  /**checkox status for is-completed status  */
   public Rev_1_IsComplete: boolean = undefined;
   public Rev_2_IsComplete: boolean;
   public APPRV_1_IsComplete: boolean;
-  public APPRV_IsComplete: boolean;
+  public APPRV_2_IsComplete: boolean;
+  /************************************************************ */
+
+  public selectedEmpIdRev1: string;
+  public selectedEmpIdRev2: string;
+  public selectedEmpIdApprvr1: string;
+  public selectedEmpIdApprvr2: string;
+
+  /**dropdown */
+  public IsDdDisabledRev1: boolean;
+  public IsDdDisabledRev2: boolean;
+  public IsDdDisabledApprvr1: boolean;
+  public IsDdDisabledApprvr2: boolean;
+
+  /**radio */
+  public IsRadioDisabledRev1: boolean;
+  public IsRadioDisabledRev2: boolean;
+  public IsRadioDisabledApprvr1: boolean;
+  public IsRadioDisabledApprvr2: boolean;
 
   constructor() {}
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
 
+    /**Remove logged in user from list */
+    this.empListTemp = this.empListDataFromParent.filter(
+      a => a.EmpId !== this.loggedInUserId
+    );
+
+    console.log("completedActionDataFromDb");
+    console.log(this.completedActionDataFromDb);
     console.log("inside child");
     console.log("loanTotalAmount from parent:" + this.loanTotalAmount);
 
-    console.log(this.empListDataFromParent);
+    console.log(this.empListTemp);
 
-    this.bindReviewerApproberDropDown(this.empListDataFromParent);
+    this.bindReviewerApproberDropDown(this.empListTemp);
 
-    console.log(this.Reviewer_1_EmpList);
-    console.log(this.Reviewer_2_EmpList);
+    console.log(this.empListRevwr_1);
+    console.log(this.empListRevwr_2);
+    this.SetDropDownAsPerSavedAction();
+  }
+
+  SetDropDownAsPerSavedAction() {
+    let reviewer1 = this.completedActionDataFromDb.find(
+      a => a.UserAction.toUpperCase() === "REVIEWER_1"
+    );
+    let reviewer2 = this.completedActionDataFromDb.find(
+      a => a.UserAction.toUpperCase() === "REVIEWER_2"
+    );
+    let approver1 = this.completedActionDataFromDb.find(
+      a => a.UserAction.toUpperCase() === "APPROVER_1"
+    );
+    let approver2 = this.completedActionDataFromDb.find(
+      a => a.UserAction.toUpperCase() === "APPROVER_2"
+    );
+    if (typeof reviewer1 != "undefined" && reviewer1 != null) {
+      //this.empListApprover_1 = this.empListApprover_1.filter(a => a.EmpId == reviewer1.CompletedByUserId);
+      this.selectedEmpIdRev1 = reviewer1.CompletedByUserId;
+      let actionLocked = reviewer1.IsCompleted.toUpperCase() == "Y";
+      this.IsDdDisabledRev1 = actionLocked;
+      this.Rev_1_IsComplete = actionLocked;
+      this.IsRadioDisabledRev1 = actionLocked;
+    }
+    if (typeof reviewer2 != "undefined" && reviewer2 != null) {
+      this.selectedEmpIdRev2 = reviewer2.CompletedByUserId;
+      let actionLocked = reviewer2.IsCompleted.toUpperCase() == "Y";
+      this.IsDdDisabledRev2 = actionLocked;
+      this.Rev_2_IsComplete = actionLocked;
+      this.IsRadioDisabledRev2 = actionLocked;
+    }
   }
 
   // OnRev1Change(event, selectedEmpId: string) {
@@ -58,15 +121,48 @@ export class LoanApprovalComponent implements OnInit {
   //   this.SetActionCompleteStatus(selectedEmpId, this._REV2);
   // }
 
-  OnRevChange(event, selectedEmpId: string) {
+  OnCheckBoxClick(event) {
+    let clickedSrc = event.target.id;
+
+    switch (clickedSrc) {
+      case "rev-1-yes":
+      case "rev-1-no": {
+        this.IsDdDisabledRev1 = clickedSrc === "rev-1-yes";
+        break;
+      }
+      case "rev-2-yes":
+      case "rev-2-no": {
+        this.IsDdDisabledRev2 = clickedSrc === "rev-2-yes";
+        break;
+      }
+
+      case "appr-1-yes":
+      case "appr-1-no": {
+        this.IsDdDisabledApprvr1 = clickedSrc === "appr-1-yes";
+        break;
+      }
+      case "appr-2-yes":
+      case "appr-2-no": {
+        this.IsDdDisabledApprvr1 = clickedSrc === "appr-2-yes";
+        break;
+      }
+    }
+
+    //alert("okk");
+  }
+
+  OnReviewerApproverChange(event, selectedEmpId: string) {
     console.log("selectedValue: " + selectedEmpId);
     this.SetActionCompleteStatus(selectedEmpId, event.target.id);
   }
 
   SetActionCompleteStatus(selectedEmpId: string, EmpRole: string) {
+    if (selectedEmpId == "-1") return;
+
     switch (EmpRole) {
+      /**Revewer *****************************************/
       case this._REV1: {
-        let emp = this.Reviewer_1_EmpList.find(
+        let emp = this.empListRevwr_1.find(
           a => a.EmpId == selectedEmpId && a.IsReviewer.toUpperCase() === "Y"
         );
         if (typeof emp != "undefined" && emp != null) {
@@ -75,15 +171,46 @@ export class LoanApprovalComponent implements OnInit {
             emp.IsCompleted.toUpperCase() !== "N"
               ? true
               : undefined;
+          this.empListRevwr_2 = this.empListRevwr_2.filter(
+            a => a.EmpId != selectedEmpId
+          );
         }
         break;
       }
       case this._REV2: {
-        let emp = this.Reviewer_2_EmpList.find(
+        let emp = this.empListRevwr_2.find(
           a => a.EmpId == selectedEmpId && a.IsReviewer.toUpperCase() === "Y"
         );
         if (typeof emp != "undefined" && emp != null) {
           this.Rev_2_IsComplete =
+            emp.IsCompleted.toUpperCase() === "Y" &&
+            emp.IsCompleted.toUpperCase() !== "N"
+              ? true
+              : undefined;
+        }
+        break;
+      }
+
+      /** Approver ********************************************* */
+      case this._APPRV1: {
+        let emp = this.empListApprover_1.find(
+          a => a.EmpId == selectedEmpId && a.IsApprover.toUpperCase() === "Y"
+        );
+        if (typeof emp != "undefined" && emp != null) {
+          this.APPRV_1_IsComplete =
+            emp.IsCompleted.toUpperCase() === "Y" &&
+            emp.IsCompleted.toUpperCase() !== "N"
+              ? true
+              : undefined;
+        }
+        break;
+      }
+      case this._APPRV2: {
+        let emp = this.empListApprover_2.find(
+          a => a.EmpId == selectedEmpId && a.IsApprover.toUpperCase() === "Y"
+        );
+        if (typeof emp != "undefined" && emp != null) {
+          this.APPRV_2_IsComplete =
             emp.IsCompleted.toUpperCase() === "Y" &&
             emp.IsCompleted.toUpperCase() !== "N"
               ? true
@@ -100,19 +227,19 @@ export class LoanApprovalComponent implements OnInit {
   }
 
   bindReviewerApproberDropDown(empList: EmpModel[]) {
-    this.Reviewer_1_EmpList = empList.filter(
+    this.empListRevwr_1 = empList.filter(
       a => a.IsReviewer.toUpperCase() === "Y"
     );
-    this.Reviewer_2_EmpList = empList.filter(
+    this.empListRevwr_2 = empList.filter(
       a =>
         a.IsReviewer.toUpperCase() === "Y" &&
         a.LoanLimit >= this.loanTotalAmount
     );
 
-    this.Approver_1_EmpList = empList.filter(
+    this.empListApprover_1 = empList.filter(
       a => a.IsApprover.toUpperCase() === "Y"
     );
-    this.Approver_2_EmpList = empList.filter(
+    this.empListApprover_2 = empList.filter(
       a =>
         a.IsApprover.toUpperCase() === "Y" &&
         a.LoanLimit >= this.loanTotalAmount
